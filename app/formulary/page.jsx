@@ -8,7 +8,7 @@ const page = () => {
         email: "",
         rut: "",
         firstName: "",
-        lastname: "",
+        lastName: "",
         phone: 0,
         password: "",
         repeatPassword: "",
@@ -52,7 +52,7 @@ const page = () => {
             name: "password",
             type: "password",
             placeholder: "************",
-            label: "Email"
+            label: "Password"
         }, {
             id: "input7",
             name: "repeatPassword",
@@ -61,7 +61,7 @@ const page = () => {
             label: "Repeat Pasword"
         }, {
             id: "input8",
-            name: "termsConditions",
+            name: "termsAndConditions",
             type: "checkbox",
             placeholder: "",
             label: "Terms & Conditions"
@@ -70,20 +70,36 @@ const page = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+    }
+
+    const handleChange = (e) => {
+        // - Primero, copio todo el contenido de values actual
+        // - Segundo, modifico el 'VALUE' segun el 'NAME' del input actual
+        setValues({ ...values, [e.target.name]: e.target.value });
+
+        // - Al ser un checkbox, solo debe cambiar del estado de false a true y viceversa.
+        if (e.target.type === "checkbox") {
+            setValues({ ...values, [e.target.name]: !values[e.target.name] });
+        }
     }
 
     return (
         <div className='flex flex-col h-screen justify-center items-center'>
-            <form className='flex flex-col gap-y-4 border border-lime-700 p-12' onSubmit={handleSubmit}>
+            <form className='flex flex-col gap-y-5 border bg-base-neutral border-neutral py-10 px-20' onSubmit={handleSubmit}>
+                <h1 className='text-center text-primary text-2xl font-bold py-2'>Formulario de Registro</h1>
                 {
-                    inputs.map((fild) => {
+                    inputs.map((input) => {
                         return (
-                            <FormInput key={fild.id} placeholder={fild.placeholder} type={fild.type} label={fild.label} />
+                            // Este componente, recibe todos los atributos definidos en el objeto input
+                            // Tambien, recibe los valores almacenados en el estado, dependiento del nombre del objeto actual
+                            <FormInput key={input.id} {...input} value={values[input.name]} onChange={handleChange} />
+
                         )
                     })
                 }
 
-                <button>Submit</button>
+                <button className='bg-base-light border border-neutral rounded-md text-primary font-bold p-2'>Submit</button>
             </form>
         </div>
     )
